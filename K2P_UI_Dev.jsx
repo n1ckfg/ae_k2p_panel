@@ -51,7 +51,7 @@ var ffxpath =  new Folder((new File($.fileName)).path + "/Kinect Skeleton.ffx");
 //~ 		var but_04 = charGroup.add("button", undefined,"Rig Head, Hands + Feet");
 //~          
 //~          var compGroup = myPanel.add("panel",undefined,'Compositing');
-//~          var but_07 = compGroup.add("button", undefined, "Create Axis Controls for Character Precomp");
+//~          var but_07 = compGroup.add("button", undefined, "Create Axis Controls");
 
 //~         myPanel.layout.layout();
 //~ 	 	 
@@ -82,29 +82,43 @@ var win = (this_obj_ instanceof Panel)
 	   	//Jeff Almasol's solution to fix text color
 	var winGfx = win.graphics;
 	var darkColorBrush = winGfx.newPen(winGfx.BrushType.SOLID_COLOR, [0,0,0], 1);
+
 //X start, Y start, X end, Y end
 win.twoDGroup = win.add('panel', [4,4,165,93], '2D Setup', {borderStyle: "etched"});
 win.threeDGroup = win.add('panel', [174,4,335,93], '3D Setup (CS5.5+ Only)', {borderStyle: "etched"});
-win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
+//win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
+win.charGroup = win.add('panel', [4,104,165,223], 'Character Setup', {borderStyle: "etched"});
+win.advGroup = win.add('panel', [174,104,335,223], 'Advanced', {borderStyle: "etched"});
+
 win.but_01 = win.twoDGroup.add('button', [8,15,152,43], 'Create 2D Template');
-win.but_05 = win.twoDGroup.add('button', [8,45,152,73], 'Import 2D MoCap Data');
-win.but_02 = win.threeDGroup.add('button', [8,15,152,43], 'Create 3D Template');
-win.but_06 = win.threeDGroup.add('button', [8,45,152,73], 'Import 3D MoCap Data');
-win.but_03 = win.charGroup.add('button', [8,15,162,43], 'Rig Puppet Layers');
-win.but_04 = win.charGroup.add('button', [168,15,322,43], 'Rig Head, Hands + Feet');
-win.but_07 = win.charGroup.add('button', [8,75,322,103], 'Create Axis Controls for Character Precomp');
-win.but_08 = win.charGroup.add('button', [168,45,322,73], 'Bake Keyframes');
-win.but_09 = win.charGroup.add('button', [8,45,162,73], 'Create Custom Camera');
+win.but_02 = win.twoDGroup.add('button', [8,45,152,73], 'Import 2D MoCap Data');
+//--
+win.but_03 = win.threeDGroup.add('button', [8,15,152,43], 'Create 3D Template');
+win.but_04 = win.threeDGroup.add('button', [8,45,152,73], 'Import 3D MoCap Data');
+//--
+win.but_05 = win.charGroup.add('button', [8,15,152,43], 'Rig Puppet Layers');
+win.but_06 = win.charGroup.add('button', [8,45,152,73], 'Rig Head, Hands + Feet');
+win.but_07 = win.charGroup.add('button', [8,75,152,103], 'Bake Keyframes');
+//--
+/*
+win.but_08 = win.advGroup.add('button', [168,15,322,43], 'Create Custom Camera');
+win.but_09 = win.advGroup.add('button', [168,45,322,73], 'Create Axis Controls');
+win.but_10 = win.advGroup.add('button', [168,75,322,103], 'Lock Rotation');
+*/
+win.but_08 = win.advGroup.add('button', [8,15,152,43], 'Create Custom Camera');
+win.but_09 = win.advGroup.add('button', [8,45,152,73], 'Create Axis Controls');
+win.but_10 = win.advGroup.add('button', [8,75,152,103], 'Lock Y Rotation');
 
 win.but_01.onClick = create2DTemplate;
-win.but_02.onClick = create3DTemplate;
-win.but_03.onClick = rigPuppet;
-win.but_04.onClick = rigExtremities;
-win.but_05.onClick = importMocap2D;
-win.but_06.onClick = importMocap3D;
-win.but_07.onClick = precompControls;
-win.but_08.onClick = bakePinKeyframes;
-win.but_09.onClick = customCamera;
+win.but_02.onClick = importMocap2D;
+win.but_03.onClick = create3DTemplate;
+win.but_04.onClick = importMocap3D;
+win.but_05.onClick = rigPuppet;
+win.but_06.onClick = rigExtremities;
+win.but_07.onClick = bakePinKeyframes;
+win.but_08.onClick = customCamera;
+win.but_09.onClick = precompControls;
+win.but_10.onClick = lockRotation;
 
 return win
 }
@@ -710,6 +724,37 @@ function importMocap3D(){  //start script
 	app.endUndoGroup();
 }  //end script
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function lockRotation(){
+    app.beginUndoGroup("Lock Rotation");
+
+    var theComp = app.project.activeItem;
+
+    if (theComp == null || !(theComp instanceof CompItem)){  // check if comp is selected
+        alert("Please establish a comp as the active item and run the script again");  // if no comp selected, display an alert
+    } else { 
+        var theLayers = theComp.selectedLayers;
+
+        if(theLayers.length==0){
+            alert("Please select some layers and run the script again.");
+        }else{
+            for (var i = 0; i < theLayers.length; i++){  // otherwise, loop through each selected layer in the selected comp
+                var curLayer = theLayers[i];  // define the layer in the loop we're currently looking at
+
+                curLayer.threeDLayer = true;
+                
+                //if (curLayer.matchName == "ADBE AV Layer"){
+                    var expr = "delta = toWorld(anchorPoint) - thisComp.activeCamera.toWorld([0,0,0]);" + "\r" + 
+                    "radiansToDegrees(Math.atan2(delta[0],delta[2]));"
+
+                    curLayer.transform.yRotation.expression = expr;
+                //}
+            }
+        }
+    }	
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
