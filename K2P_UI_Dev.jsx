@@ -87,8 +87,8 @@ var win = (this_obj_ instanceof Panel)
 win.twoDGroup = win.add('panel', [4,4,165,93], '2D Setup', {borderStyle: "etched"});
 win.threeDGroup = win.add('panel', [174,4,335,93], '3D Setup (CS5.5+ Only)', {borderStyle: "etched"});
 //win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
-win.charGroup = win.add('panel', [4,104,165,223], 'Character Setup', {borderStyle: "etched"});
-win.advGroup = win.add('panel', [174,104,335,223], 'Advanced', {borderStyle: "etched"});
+win.charGroup = win.add('panel', [4,104,165,193], 'Character Setup', {borderStyle: "etched"});
+win.advGroup = win.add('panel', [174,104,335,193], 'Advanced', {borderStyle: "etched"});
 
 win.but_01 = win.twoDGroup.add('button', [8,15,152,43], 'Create 2D Template');
 win.but_02 = win.twoDGroup.add('button', [8,45,152,73], 'Import 2D MoCap Data');
@@ -98,7 +98,7 @@ win.but_04 = win.threeDGroup.add('button', [8,45,152,73], 'Import 3D MoCap Data'
 //--
 win.but_05 = win.charGroup.add('button', [8,15,152,43], 'Rig Puppet Layers');
 win.but_06 = win.charGroup.add('button', [8,45,152,73], 'Rig Head, Hands + Feet');
-win.but_07 = win.charGroup.add('button', [8,75,152,103], 'Bake Keyframes');
+//win.but_07 = win.charGroup.add('button', [8,75,152,103], 'Bake Keyframes');
 //--
 /*
 win.but_08 = win.advGroup.add('button', [168,15,322,43], 'Create Custom Camera');
@@ -107,7 +107,7 @@ win.but_10 = win.advGroup.add('button', [168,75,322,103], 'Lock Rotation');
 */
 win.but_08 = win.advGroup.add('button', [8,15,152,43], 'Create Custom Camera');
 win.but_09 = win.advGroup.add('button', [8,45,152,73], 'Create Axis Controls');
-win.but_10 = win.advGroup.add('button', [8,75,152,103], 'Lock Y Rotation');
+//win.but_10 = win.advGroup.add('button', [8,75,152,103], 'Lock Y Rotation');
 
 win.but_01.onClick = create2DTemplate;
 win.but_02.onClick = importMocap2D;
@@ -115,10 +115,10 @@ win.but_03.onClick = create3DTemplate;
 win.but_04.onClick = importMocap3D;
 win.but_05.onClick = rigPuppet;
 win.but_06.onClick = rigExtremities;
-win.but_07.onClick = bakePinKeyframes;
+//win.but_07.onClick = bakePinKeyframes;
 win.but_08.onClick = customCamera;
 win.but_09.onClick = precompControls;
-win.but_10.onClick = lockRotation;
+//win.but_10.onClick = lockRotation;
 
 return win
 }
