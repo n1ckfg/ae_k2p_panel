@@ -349,7 +349,7 @@
                                         "ang = radians_to_degrees(angle); \r" +
                                         "(ang+270)%360+value;";
                     curLayer.property("Transform").property("Rotation").expression = rotexpression;
-                }else{ }
+                }
 
                 // Add expressions for left foot
                 if (curLayer.name == "l_foot_layer"){
@@ -379,7 +379,7 @@
                                         "ang = radians_to_degrees(angle); \r" +
                                         "(ang+270)%360+value;";
                     curLayer.property("Transform").property("Rotation").expression = rotexpression;
-                }else{ }
+                }
 
                 // Add expressions for right hand
                 if (curLayer.name == "r_hand_layer"){
@@ -409,7 +409,7 @@
                                         "ang = radians_to_degrees(angle); \r" +
                                         "(ang+270)%360+value;";
                     curLayer.property("Transform").property("Rotation").expression = rotexpression;
-                }else{ }
+                }
 
                 // Add expressions for right foot
                 if (curLayer.name == "r_foot_layer"){
@@ -439,7 +439,7 @@
                                         "ang = radians_to_degrees(angle); \r" +
                                         "(ang+270)%360+value;";
                     curLayer.property("Transform").property("Rotation").expression = rotexpression;
-                }else{ }
+                }
 
                 // Add expressions for head
                 if (curLayer.name == "head_layer"){
@@ -469,7 +469,7 @@
                                         "ang = radians_to_degrees(angle); \r" +
                                         "(ang+270)%360+value;";
                     curLayer.property("Transform").property("Rotation").expression = rotexpression;
-                }else{ }
+                }
             }
         }
         
