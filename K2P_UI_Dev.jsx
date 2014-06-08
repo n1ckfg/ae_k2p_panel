@@ -30,8 +30,8 @@
         //X start, Y start, X end, Y end
         win.twoDGroup = win.add('panel', [4,4,165,93], '2D Setup', {borderStyle: "etched"});
         win.threeDGroup = win.add('panel', [174,4,335,93], '3D Setup (CS5.5+ Only)', {borderStyle: "etched"});
-        win.charGroup = win.add('panel', [4,104,165,193], 'Character Setup', {borderStyle: "etched"});
-        win.advGroup = win.add('panel', [174,104,335,193], 'Advanced', {borderStyle: "etched"});
+        win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
+        //win.advGroup = win.add('panel', [174,104,335,193], 'Advanced', {borderStyle: "etched"});
 
         win.but_01 = win.twoDGroup.add('button', [8,15,152,43], 'Create 2D Template');
         win.but_02 = win.twoDGroup.add('button', [8,45,152,73], 'Import 2D MoCap Data');
@@ -42,8 +42,10 @@
         win.but_05 = win.charGroup.add('button', [8,15,152,43], 'Rig Puppet Layers');
         win.but_06 = win.charGroup.add('button', [8,45,152,73], 'Rig Head, Hands + Feet');
 
-        win.but_07 = win.advGroup.add('button', [8,15,152,43], 'Create Custom Camera');
-        win.but_08 = win.advGroup.add('button', [8,45,152,73], 'Create Axis Controls');
+        win.but_07 = win.charGroup.add('button', [168,15,322,43], 'Create Custom Camera');
+        win.but_08 = win.charGroup.add('button', [168,45,322,73], 'MoCap Auto-Scale Z');
+
+        win.but_09 = win.charGroup.add('button', [8,75,322,103], 'Create Axis Controls for Character Precomp');
 
         win.but_01.onClick = create2DTemplate;
         win.but_02.onClick = importMocap2D;
@@ -52,7 +54,8 @@
         win.but_05.onClick = rigPuppet;
         win.but_06.onClick = rigExtremities;
         win.but_07.onClick = customCamera;
-        win.but_08.onClick = precompControls;
+        win.but_08.onClick = autoScaleZ;
+        win.but_09.onClick = precompControls;
 
         //tooltips
         win.but_01.helpTip = "Creates a new comp to hold 2D mocap data."; //create2DTemplate;
@@ -62,7 +65,8 @@
         win.but_05.helpTip = "Rigs puppet pins to be driven by mocap data."; //rigPuppet;
         win.but_06.helpTip = "Rigs head/hand/foot layers to be driven by mocap data."; //rigExtremities;
         win.but_07.helpTip = "Use a camera to change the perspective of mocap data."; //customCamera;
-        win.but_08.helpTip = "Locks XYZ axes of mocap data in a comp."; //precompControls;
+        win.but_08.helpTip = "Auto-scales Z axis of the mocap data"; //precompControls;
+        win.but_09.helpTip = "Locks XYZ axes of mocap data in a precomp."; //precompControls;
 
         return win
     }
@@ -227,6 +231,7 @@
             */
             
             // Auto-scale Z on mocap layer
+            /*
             var autoZ = mocap.property("position");
             autoZ.expression = "mocap = thisLayer; \r" +
                                "try{cam = thisComp.activeCamera;}catch(err){ cam = mocap }; \r" +
@@ -234,6 +239,7 @@
                                "tW = mocap.toWorld(torso); \r" +
                                "fW = cam.fromWorld(tW); \r" +
                                "[value[0],value[1],value[2]+(1500-fW[2])*2]"; 
+            */
 
             //add skeleton visualizer
             var skeleviz = myComp.layers.addSolid([0, 0, 0], "Skeleton Visualizer", 1920, 1080, 1);
@@ -828,6 +834,49 @@
                         curLayer.property("Transform").property("Scale").expression = scaleexpression;
                     }
                 }
+            }
+        } else {
+
+            // Alert users of incompatibility with older versions of AE
+            alert("Sorry, this feature only works with CS5.5 and higher.");
+
+        }
+
+    app.endUndoGroup();
+    }  //end script
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    function autoScaleZ() { //start script
+        app.beginUndoGroup("Auto-Scale Z on Mocap Layer");
+        if(parseFloat(app.version) >= 10.5){
+
+            var theComp = app.project.activeItem;
+            if (theComp == null || !(theComp instanceof CompItem)){
+                // if no comp selected, display an alert
+                alert("Please establish a comp as the active item and run the script again");
+            } else { 
+                // ...then loop through each layer in the selected comp
+                var cantFindMocap = true;
+                for (var i = 1; i <= theComp.numLayers; ++i){
+                    // define the layer in the loop we're currently looking at
+                    var curLayer = theComp.layer(i);
+
+                    // Select layer to add expression to
+                    if (curLayer.name == "mocap"){
+                        cantFindMocap = false;
+                        // Auto-scale Z on mocap layer
+            
+                        var autoZ = curLayer.property("position");
+                        autoZ.expression = "mocap = thisLayer; \r" +
+                                           "try{cam = thisComp.activeCamera;}catch(err){ cam = mocap }; \r" +
+                                           "torso = mocap.effect(\"torso\")(\"3D Point\"); \r" +
+                                           "tW = mocap.toWorld(torso); \r" +
+                                           "fW = cam.fromWorld(tW); \r" +
+                                           "[value[0],value[1],value[2]+(1500-fW[2])*2]"; 
+                    }
+                }
+                if(cantFindMocap) alert("Couldn't find a layer in this comp with mocap data.")
             }
         } else {
 
