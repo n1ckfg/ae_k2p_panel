@@ -54,6 +54,16 @@
         win.but_07.onClick = customCamera;
         win.but_08.onClick = precompControls;
 
+        //tooltips
+        win.but_01.helpTip = "Creates a new comp to hold 2D mocap data."; //create2DTemplate;
+        win.but_02.helpTip = "Loads 2D mocap data into an existing comp."; //importMocap2D;
+        win.but_03.helpTip = "Creates a new comp to hold 3D mocap data."; //create3DTemplate;
+        win.but_04.helpTip = "Loads 3D mocap data into an existing comp."; //importMocap3D;
+        win.but_05.helpTip = "Rigs puppet pins to be driven my mocap data."; //rigPuppet;
+        win.but_06.helpTip = "Rigs head/hand/foot layers to be driven by mocap data."; //rigExtremities;
+        win.but_07.helpTip = "Use a camera to change the perspective of mocap data."; //customCamera;
+        win.but_08.helpTip = "Locks XYZ axes of mocap data in a comp."; //precompControls;
+
         return win
     }
 
