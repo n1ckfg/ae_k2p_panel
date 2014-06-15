@@ -33,19 +33,19 @@
         win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
         //win.advGroup = win.add('panel', [174,104,335,193], 'Advanced', {borderStyle: "etched"});
 
-        win.but_01 = win.twoDGroup.add('button', [8,15,152,43], 'Create 2D Template');
-        win.but_02 = win.twoDGroup.add('button', [8,45,152,73], 'Import 2D MoCap Data');
+        win.but_01 = win.twoDGroup.add('button', [8,15,149,43], 'Create 2D Template');
+        win.but_02 = win.twoDGroup.add('button', [8,45,149,73], 'Import 2D MoCap Data');
         //--
-        win.but_03 = win.threeDGroup.add('button', [8,15,152,43], 'Create 3D Template');
-        win.but_04 = win.threeDGroup.add('button', [8,45,152,73], 'Import 3D MoCap Data');
+        win.but_03 = win.threeDGroup.add('button', [8,15,149,43], 'Create 3D Template');
+        win.but_04 = win.threeDGroup.add('button', [8,45,149,73], 'Import 3D MoCap Data');
         //--
-        win.but_05 = win.charGroup.add('button', [8,15,152,43], 'Rig Puppet Layers');
-        win.but_06 = win.charGroup.add('button', [8,45,152,73], 'Rig Head, Hands + Feet');
+        win.but_05 = win.charGroup.add('button', [8,15,159,43], 'Rig Puppet Layers');
+        win.but_06 = win.charGroup.add('button', [8,45,159,73], 'Rig Head, Hands + Feet');
 
-        win.but_07 = win.charGroup.add('button', [168,15,322,43], 'Create Custom Camera');
-        win.but_08 = win.charGroup.add('button', [168,45,322,73], 'MoCap Auto-Scale Z');
+        win.but_07 = win.charGroup.add('button', [168,15,319,43], 'Create Custom Camera');
+        win.but_08 = win.charGroup.add('button', [168,45,319,73], 'MoCap Auto-Scale Z');
 
-        win.but_09 = win.charGroup.add('button', [8,75,322,103], 'Create Axis Controls for Character Precomp');
+        win.but_09 = win.charGroup.add('button', [8,75,319,103], 'Create Axis Controls for Character Precomp');
 
         win.but_01.onClick = create2DTemplate;
         win.but_02.onClick = importMocap2D;
