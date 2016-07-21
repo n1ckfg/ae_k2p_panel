@@ -28,25 +28,29 @@
         var darkColorBrush = winGfx.newPen(winGfx.BrushType.SOLID_COLOR, [0,0,0], 1);
 
         //X start, Y start, X end, Y end
+
+        // panel layout
         win.twoDGroup = win.add('panel', [4,4,165,93], '2D Setup', {borderStyle: "etched"});
         win.threeDGroup = win.add('panel', [174,4,335,93], '3D Setup (CS5.5+ Only)', {borderStyle: "etched"});
         win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
-        //win.advGroup = win.add('panel', [174,104,335,193], 'Advanced', {borderStyle: "etched"});
+        win.advGroup = win.add('panel', [4,234,335,293], 'Advanced', {borderStyle: "etched"});
 
+        // button layout
         win.but_01 = win.twoDGroup.add('button', [8,15,149,43], 'Create 2D Template');
-        win.but_02 = win.twoDGroup.add('button', [8,45,149,73], 'Import 2D MoCap Data');
-        //--
+        win.but_02 = win.twoDGroup.add('button', [8,45,149,73], 'Import 2D Mocap Data');
         win.but_03 = win.threeDGroup.add('button', [8,15,149,43], 'Create 3D Template');
-        win.but_04 = win.threeDGroup.add('button', [8,45,149,73], 'Import 3D MoCap Data');
+        win.but_04 = win.threeDGroup.add('button', [8,45,149,73], 'Import 3D Mocap Data');
         //--
         win.but_05 = win.charGroup.add('button', [8,15,159,43], 'Rig Puppet Layers');
         win.but_06 = win.charGroup.add('button', [8,45,159,73], 'Rig Head, Hands + Feet');
-
         win.but_07 = win.charGroup.add('button', [168,15,319,43], 'Create Custom Camera');
-        win.but_08 = win.charGroup.add('button', [168,45,319,73], 'MoCap Auto-Scale Z');
-
+        win.but_08 = win.charGroup.add('button', [168,45,319,73], 'Mocap Auto-Scale Z');
         win.but_09 = win.charGroup.add('button', [8,75,319,103], 'Create Axis Controls for Character Precomp');
+        //--
+        win.but_10 = win.advGroup.add('button', [8,15,159,43], '2D Template From Nulls');
+        win.but_11 = win.advGroup.add('button', [168,15,319,43], '3D Template From Nulls'); 
 
+        // functions
         win.but_01.onClick = create2DTemplate;
         win.but_02.onClick = importMocap2D;
         win.but_03.onClick = create3DTemplate;
@@ -56,8 +60,10 @@
         win.but_07.onClick = customCamera;
         win.but_08.onClick = autoScaleZ;
         win.but_09.onClick = precompControls;
+        win.but_10.onClick = templateFromNulls2D;
+        win.but_11.onClick = templateFromNulls3D;
 
-        //tooltips
+        // tooltips
         win.but_01.helpTip = "Creates a new comp to hold 2D mocap data."; //create2DTemplate;
         win.but_02.helpTip = "Loads 2D mocap data into an existing comp."; //importMocap2D;
         win.but_03.helpTip = "Creates a new comp to hold 3D mocap data."; //create3DTemplate;
@@ -67,6 +73,7 @@
         win.but_07.helpTip = "Use a camera to change the perspective of mocap data."; //customCamera;
         win.but_08.helpTip = "Auto-scales Z axis of the mocap data"; //precompControls;
         win.but_09.helpTip = "Locks XYZ axes of mocap data in a precomp."; //precompControls;
+        win.but_10.helpTip = "Creates a new template from selected nulls."; //precompControls;
 
         return win
     }
@@ -77,6 +84,90 @@
     } else {
         w.show();
     }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    function templateFromNulls2D() {
+        app.beginUndoGroup("Create 2D Template From Nulls");
+        app.endUndoGroup();
+    }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Build the rig template with placeholder source pins and 2D control nulls
+    function templateFromNulls3D() { // KinectToPin Template Setup for UI Panels
+
+        //start script
+        app.beginUndoGroup("Create 3D Template From Nulls");
+
+        // create project if necessary
+        var proj = app.project;
+        if(!proj) proj = app.newProject();
+
+        // create new comp named 'my comp'
+        var compW = 1920; // comp width
+        var compH = 1080; // comp height
+        var compL = 15;  // comp length (seconds)
+        var compRate = 24; // comp frame rate
+        var compBG = [0/255,0/255,0/255]; // comp background color
+        var myItemCollection = app.project.items;
+        var myComp = myItemCollection.addComp('KinectToPin 2D Template',compW,compH,1,compL,compRate);
+        myComp.bgColor = compBG;
+        
+        // add mocap source layer
+        var mocap = myComp.layers.addSolid([0, 0, 0], "mocap", 640, 480, 1);
+        mocap.guideLayer = true;
+        mocap.threeDLayer = true;
+        //mocap.locked = true;
+        mocap.property("position").setValue([960,540]);
+        mocap.property("anchorPoint").setValue([0,0]);
+        mocap.property("opacity").setValue(0);
+        
+        // array of all points KinectToPin tracks
+        var trackpoint = jointNamesMaster;
+                
+        // create source point control and control null for each
+        for (var i = 0; i <= 14; i++){        
+            // add source point
+            var pointname = trackpoint[i];
+            var myEffect = mocap.property("Effects").addProperty("Point Control");
+            myEffect.name = pointname;
+            var p = mocap.property("Effects")(pointname)("Point");
+            p.expression = "pin = smooth(.2,5); \r" +
+                           "sW = thisLayer.width; \r" +
+                           "dW = thisComp.width; \r" +
+                           "sH = thisLayer.height; \r" +
+                           "dH = thisComp.height; \r" +
+                           "[pin[0]*(dW/sW)-(.5*dW), pin[1]*(dH/sH)-(.5*dH)];";
+        }
+
+        for (var j = 14; j >= 0; j--){ 
+            // add control null
+            var pointname = trackpoint[j];
+            var solid = myComp.layers.addSolid([1.0, 0, 0], pointname, 50, 50, 1);
+            solid.guideLayer = true;
+            solid.property("opacity").setValue(33);
+            solid.property("position").setValue([0,0]);
+            solid.property("anchorPoint").setValue([0,0]);
+            var p = solid.property("position");
+            var expression = "pin = thisLayer.name;\r" +
+                             "master_source = thisComp.layer(\"mocap\");\r" +
+                             "source_point = master_source.effect(pin)(\"Point\");\r" +
+                             "point = master_source.toComp(source_point);\r" +
+                             "point + value\r"; 
+            p.expression = expression;
+        }
+        
+        //add skeleton visualizer
+        var skeleviz = myComp.layers.addSolid([0, 0, 0], "Skeleton Visualizer", 1920, 1080, 1);
+        skeleviz.guideLayer = true;
+        skeleviz.locked = true;
+        skeleviz.property("opacity").setValue(50);
+        var myPreset = File(ffxpath);
+        skeleviz.applyPreset(myPreset);    
+        
+        app.endUndoGroup();
+    }  //end script
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
