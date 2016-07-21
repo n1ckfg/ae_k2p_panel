@@ -10,10 +10,14 @@ DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 cd $DIR
 
-FILE_NAME=K2P_UI_Dev
+FILE_NAMES=( "K2P_UI_Dev.jsx" "Kinect_Skeleton.ffx" )
 
-cp $FILE_NAME.jsx /Applications/Adobe\ After\ Effects\ CS6/Scripts/ScriptUI\ Panels/
-cp $FILE_NAME.jsx /Applications/Adobe\ After\ Effects\ CC/Scripts/ScriptUI\ Panels/
-cp $FILE_NAME.jsx /Applications/Adobe\ After\ Effects\ CC\ 2014/Scripts/ScriptUI\ Panels/
-cp $FILE_NAME.jsx /Applications/Adobe\ After\ Effects\ CC\ 2015/Scripts/ScriptUI\ Panels/
-cp $FILE_NAME.jsx /Applications/Adobe\ After\ Effects\ CC\ 2015.3/Scripts/ScriptUI\ Panels/
+for i in "${FILE_NAMES[@]}"
+do
+	:
+	cp $i /Applications/Adobe\ After\ Effects\ CS6/Scripts/ScriptUI\ Panels/
+	cp $i /Applications/Adobe\ After\ Effects\ CC/Scripts/ScriptUI\ Panels/
+	cp $i /Applications/Adobe\ After\ Effects\ CC\ 2014/Scripts/ScriptUI\ Panels/
+	cp $i /Applications/Adobe\ After\ Effects\ CC\ 2015/Scripts/ScriptUI\ Panels/
+	cp $i /Applications/Adobe\ After\ Effects\ CC\ 2015.3/Scripts/ScriptUI\ Panels/
+done
