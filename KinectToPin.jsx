@@ -33,7 +33,7 @@
         win.twoDGroup = win.add('panel', [4,4,165,93], '2D Setup', {borderStyle: "etched"});
         win.threeDGroup = win.add('panel', [174,4,335,93], '3D Setup (CS5.5+ Only)', {borderStyle: "etched"});
         win.charGroup = win.add('panel', [4,104,335,223], 'Character Setup', {borderStyle: "etched"});
-        win.advGroup = win.add('panel', [4,234,335,293], 'Advanced', {borderStyle: "etched"});
+        //win.advGroup = win.add('panel', [4,234,335,293], 'Advanced', {borderStyle: "etched"});
 
         // button layout
         win.but_01 = win.twoDGroup.add('button', [8,15,149,43], 'Create 2D Template');
@@ -47,8 +47,8 @@
         win.but_08 = win.charGroup.add('button', [168,45,319,73], 'Mocap Auto-Scale Z');
         win.but_09 = win.charGroup.add('button', [8,75,319,103], 'Create Axis Controls for Character Precomp');
         //--
-        win.but_10 = win.advGroup.add('button', [8,15,159,43], '2D Template From Nulls');
-        win.but_11 = win.advGroup.add('button', [168,15,319,43], '3D Template From Nulls'); 
+        //win.but_10 = win.advGroup.add('button', [8,15,159,43], '2D Template From Nulls');
+        //win.but_11 = win.advGroup.add('button', [168,15,319,43], '3D Template From Nulls'); 
 
         // functions
         win.but_01.onClick = create2DTemplate;
@@ -60,8 +60,8 @@
         win.but_07.onClick = customCamera;
         win.but_08.onClick = autoScaleZ;
         win.but_09.onClick = precompControls;
-        win.but_10.onClick = templateFromNulls2D;
-        win.but_11.onClick = templateFromNulls3D;
+        //win.but_10.onClick = templateFromNulls2D;
+        //win.but_11.onClick = templateFromNulls3D;
 
         // tooltips
         win.but_01.helpTip = "Creates a new comp to hold 2D mocap data."; //create2DTemplate;
@@ -73,8 +73,8 @@
         win.but_07.helpTip = "Use a camera to change the perspective of mocap data."; //customCamera;
         win.but_08.helpTip = "Auto-scales Z axis of the mocap data"; //autoScaleZ;
         win.but_09.helpTip = "Locks XYZ axes of mocap data in a precomp."; //precompControls;
-        win.but_10.helpTip = "Creates a new 2D template from selected nulls."; //templateFromNulls2D;
-        win.but_11.helpTip = "Creates a new 3D template from selected nulls."; //templateFromNulls3D;
+        //win.but_10.helpTip = "Creates a new 2D template from selected nulls."; //templateFromNulls2D;
+        //win.but_11.helpTip = "Creates a new 3D template from selected nulls."; //templateFromNulls3D;
 
         return win
     }
