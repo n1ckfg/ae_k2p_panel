@@ -71,9 +71,10 @@
         win.but_05.helpTip = "Rigs puppet pins to be driven by mocap data."; //rigPuppet;
         win.but_06.helpTip = "Rigs head/hand/foot layers to be driven by mocap data."; //rigExtremities;
         win.but_07.helpTip = "Use a camera to change the perspective of mocap data."; //customCamera;
-        win.but_08.helpTip = "Auto-scales Z axis of the mocap data"; //precompControls;
+        win.but_08.helpTip = "Auto-scales Z axis of the mocap data"; //autoScaleZ;
         win.but_09.helpTip = "Locks XYZ axes of mocap data in a precomp."; //precompControls;
-        win.but_10.helpTip = "Creates a new template from selected nulls."; //precompControls;
+        win.but_10.helpTip = "Creates a new 2D template from selected nulls."; //templateFromNulls2D;
+        win.but_11.helpTip = "Creates a new 3D template from selected nulls."; //templateFromNulls3D;
 
         return win
     }
@@ -88,15 +89,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
+    // Build the rig template with placeholder source pins and 2D control nulls
     function templateFromNulls2D() {
-        app.beginUndoGroup("Create 2D Template From Nulls");
-        app.endUndoGroup();
+        templateFromNulls(false);
     }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Build the rig template with placeholder source pins and 2D control nulls
-    function templateFromNulls3D() { // KinectToPin Template Setup for UI Panels
+    function templateFromNulls3D() {
+        templateFromNulls(true);
+    }
 
+    function templateFromNulls(do3d) { // KinectToPin Template Setup for UI Panels
         //start script
         app.beginUndoGroup("Create 3D Template From Nulls");
 
@@ -111,7 +113,13 @@
         var compRate = 24; // comp frame rate
         var compBG = [0/255,0/255,0/255]; // comp background color
         var myItemCollection = app.project.items;
-        var myComp = myItemCollection.addComp('KinectToPin 2D Template',compW,compH,1,compL,compRate);
+        var newName = "";
+        if (do3d) {
+            newName = "KinectToPin 3D Template";
+        } else {
+            newName = "KinectToPin 2D Template";
+        }
+        var myComp = myItemCollection.addComp(newName,compW,compH,1,compL,compRate);
         myComp.bgColor = compBG;
         
         // add mocap source layer
@@ -145,6 +153,7 @@
             // add control null
             var pointname = trackpoint[j];
             var solid = myComp.layers.addSolid([1.0, 0, 0], pointname, 50, 50, 1);
+            if(do3d) solid.threeDLayer = true;
             solid.guideLayer = true;
             solid.property("opacity").setValue(33);
             solid.property("position").setValue([0,0]);
@@ -188,7 +197,7 @@
     	var compRate = 24; // comp frame rate
     	var compBG = [0/255,0/255,0/255]; // comp background color
     	var myItemCollection = app.project.items;
-    	var myComp = myItemCollection.addComp('KinectToPin 2D Template',compW,compH,1,compL,compRate);
+    	var myComp = myItemCollection.addComp("KinectToPin 2D Template",compW,compH,1,compL,compRate);
     	myComp.bgColor = compBG;
     	
     	// add mocap source layer
@@ -267,7 +276,7 @@
         	var compRate = 24; // comp frame rate
         	var compBG = [0/255,0/255,0/255]; // comp background color
         	var myItemCollection = app.project.items;
-        	var myComp = myItemCollection.addComp('KinectToPin 3D Template',compW,compH,1,compL,compRate);
+        	var myComp = myItemCollection.addComp("KinectToPin 3D Template",compW,compH,1,compL,compRate);
         	myComp.bgColor = compBG;
           
         	// add mocap source layer
